@@ -1,4 +1,4 @@
-/* eslint no-unused-expressions: 0, no-param-reassign: 0 */
+/* eslint no-unused-expressions: 0, no-param-reassign: 0, newline-per-chained-call: 0 */
 import { expect } from 'chai';
 import request from 'supertest-as-promised';
 import Koa from 'koa';
@@ -340,7 +340,34 @@ describe('koa-router', () => {
     });
 
     it('should throw when value is invalid', async () => {
-      // body...
+      const router = new Router();
+      router.get(
+        '/api/:username',
+        validator({
+          params: object().keys({
+            username: string().min(1).max(4).required(),
+          }),
+        }),
+        async (ctx) => {
+          ctx.body = ctx.params;
+        }
+      );
+
+      const app = new Koa();
+      app.use(errorHandler);
+      app.use(router.middleware());
+
+      const response = await request(app.listen())
+        .get('/api/Peter');
+
+      expect(response.status).to.equal(400);
+      expect(response.body).to.deep.equal({
+        error: true,
+        name: 'ValidationError',
+        message:
+          'child "username" fails because ' +
+          '["username" length must be less than or equal to 4 characters long]',
+      });
     });
   });
 });
