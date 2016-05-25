@@ -5,7 +5,7 @@
 [![Test coverage][coveralls-image]][coveralls-url]
 [![Dependency Status][david_img]][david_site]
 
-> A robust context validator for koajs
+> A robust context validator for koajs. Use `Joi` behind the scenes.
 
 
 ## Install
