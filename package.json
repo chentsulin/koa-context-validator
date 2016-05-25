@@ -44,6 +44,7 @@
     "istanbul": "^0.4.1",
     "koa": "^2.0.0",
     "koa-bodyparser": "^3.1.0",
+    "koa-compose": "^3.1.0",
     "koa-mount": "^2.0.0",
     "koa-router": "^7.0.1",
     "mocha": "^2.4.5",
