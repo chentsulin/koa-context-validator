@@ -63,7 +63,8 @@
     "testonly": "NODE_ENV=test mocha $npm_package_options_mocha",
     "test": "npm run lint && npm run testonly",
     "test:cov": "nyc npm test",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepublish": "npm run clean && npm test && npm run build"
   },
   "devEngines": {
     "node": "4.x || 5.x || 6.x",
