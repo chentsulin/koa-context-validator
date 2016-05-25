@@ -131,15 +131,15 @@ import validator, {
 
 const router = new Router();
 router.get(
-	'/api/:username',
-	validator({
-  	params: object().keys({
-    	username: string().required(),
-  	}),
-	}),
-	async (ctx) => {
-  	ctx.body = ctx.params;
-	}
+  '/api/:username',
+  validator({
+    params: object().keys({
+      username: string().required(),
+    }),
+  }),
+  async (ctx) => {
+    ctx.body = ctx.params;
+  }
 );
 
 const app = new Koa();
