@@ -200,7 +200,7 @@ MIT © [C.T. Lin](https://github.com/chentsulin/koa-context-validator)
 [npm-url]: https://npmjs.org/package/koa-context-validator
 [travis-image]: https://travis-ci.org/chentsulin/koa-context-validator.svg
 [travis-url]: https://travis-ci.org/chentsulin/koa-context-validator
-[coveralls-image]: https://coveralls.io/repos/chentsulin/koa-context-validator/badge.svg?branch=master&service=github
+[coveralls-image]: https://coveralls.io/repos/github/chentsulin/koa-context-validator/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/r/chentsulin/koa-context-validator?branch=master
 [david_img]: https://david-dm.org/chentsulin/koa-context-validator.svg
 [david_site]: https://david-dm.org/chentsulin/koa-context-validator
