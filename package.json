@@ -57,7 +57,6 @@
     "mocha": "--compilers js:babel-register --require babel-polyfill src/**/__tests__/**/*.spec.js"
   },
   "scripts": {
-    "postinstall": "npm run build",
     "clean": "rimraf lib dist .nyc_output",
     "build": "npm run clean && babel src -d lib --ignore __tests__",
     "testonly": "NODE_ENV=test mocha $npm_package_options_mocha",
