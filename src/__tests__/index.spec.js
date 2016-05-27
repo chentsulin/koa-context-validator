@@ -21,19 +21,6 @@ import validator, {
   isRef,
 } from '../';
 
-async function errorHandler(ctx, next) {
-  try {
-    await next();
-  } catch (err) {
-    ctx.status = 400;
-    ctx.body = {
-      error: true,
-      name: err.name,
-      message: err.message,
-    };
-  }
-}
-
 it('should export Joi types', () => {
   expect(any).to.exist;
   expect(alternatives).to.exist;
@@ -53,7 +40,8 @@ describe('should pass when value is valid', () => {
   it('query', async () => {
     const app = new Koa();
 
-    app.use(errorHandler);
+    let query;
+
     app.use(validator({
       query: object().keys({
         username: string().required(),
@@ -61,17 +49,16 @@ describe('should pass when value is valid', () => {
     }));
 
     app.use((ctx) => {
-      ctx.body = ctx.request.query;
+      query = ctx.request.query;
     });
 
-    const response = await request(app.listen())
+    await request(app.listen())
       .get('/')
       .query({
         username: 'Peter',
       });
 
-    expect(response.status).to.equal(200);
-    expect(response.body).to.deep.equal({
+    expect(query).to.deep.equal({
       username: 'Peter',
     });
   });
@@ -79,7 +66,8 @@ describe('should pass when value is valid', () => {
   it('body', async () => {
     const app = new Koa();
 
-    app.use(errorHandler);
+    let body;
+
     app.use(bodyParser());
     app.use(validator({
       body: object().keys({
@@ -89,18 +77,17 @@ describe('should pass when value is valid', () => {
     }));
 
     app.use((ctx) => {
-      ctx.body = ctx.request.body;
+      body = ctx.request.body;
     });
 
-    const response = await request(app.listen())
+    await request(app.listen())
       .post('/')
       .send({
         username: 'Peter',
         age: 18,
       });
 
-    expect(response.status).to.equal(200);
-    expect(response.body).to.deep.equal({
+    expect(body).to.deep.equal({
       username: 'Peter',
       age: 18,
     });
@@ -109,7 +96,8 @@ describe('should pass when value is valid', () => {
   it('headers', async () => {
     const app = new Koa();
 
-    app.use(errorHandler);
+    let headers;
+
     app.use(validator({
       headers: object().keys({
         username: string().required(),
@@ -117,15 +105,14 @@ describe('should pass when value is valid', () => {
     }));
 
     app.use((ctx) => {
-      ctx.body = ctx.request.headers;
+      headers = ctx.request.headers;
     });
 
-    const response = await request(app.listen())
+    await request(app.listen())
       .get('/')
       .set('username', 'Peter');
 
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.property('username').and.equal('Peter');
+    expect(headers).to.have.property('username').and.equal('Peter');
   });
 });
 
@@ -133,28 +120,38 @@ describe('should throw when value is invalid', () => {
   it('query', async () => {
     const app = new Koa();
 
-    app.use(errorHandler);
+    let error;
+    app.use(async (ctx, next) => {
+      try {
+        await next();
+      } catch (err) {
+        error = err;
+      }
+    });
     app.use(validator({
       query: object().keys({
         username: string().required(),
       }),
     }));
 
-    const response = await request(app.listen())
+    await request(app.listen())
         .get('/');
 
-    expect(response.status).to.equal(400);
-    expect(response.body).to.deep.equal({
-      error: true,
-      name: 'ValidationError',
-      message: 'child "username" fails because ["username" is required]',
-    });
+    expect(error.name).to.equal('ValidationError');
+    expect(error.message).to.equal('child "username" fails because ["username" is required]');
   });
 
   it('body', async () => {
     const app = new Koa();
 
-    app.use(errorHandler);
+    let error;
+    app.use(async (ctx, next) => {
+      try {
+        await next();
+      } catch (err) {
+        error = err;
+      }
+    });
     app.use(bodyParser());
     app.use(validator({
       body: object().keys({
@@ -162,36 +159,35 @@ describe('should throw when value is invalid', () => {
       }),
     }));
 
-    const response = await request(app.listen())
+    await request(app.listen())
       .post('/');
 
-    expect(response.status).to.equal(400);
-    expect(response.body).to.deep.equal({
-      error: true,
-      name: 'ValidationError',
-      message: 'child "username" fails because ["username" is required]',
-    });
+    expect(error.name).to.equal('ValidationError');
+    expect(error.message).to.equal('child "username" fails because ["username" is required]');
   });
 
   it('headers', async () => {
     const app = new Koa();
 
-    app.use(errorHandler);
+    let error;
+    app.use(async (ctx, next) => {
+      try {
+        await next();
+      } catch (err) {
+        error = err;
+      }
+    });
     app.use(validator({
       headers: object().keys({
         username: string().required(),
       }).unknown(),
     }));
 
-    const response = await request(app.listen())
+    await request(app.listen())
       .get('/');
 
-    expect(response.status).to.equal(400);
-    expect(response.body).to.deep.equal({
-      error: true,
-      name: 'ValidationError',
-      message: 'child "username" fails because ["username" is required]',
-    });
+    expect(error.name).to.equal('ValidationError');
+    expect(error.message).to.equal('child "username" fails because ["username" is required]');
   });
 });
 
@@ -199,7 +195,8 @@ describe('stripUnknown', () => {
   it('should pass only valid value when stripUnknown is true', async () => {
     const app = new Koa();
 
-    app.use(errorHandler);
+    let body;
+
     app.use(bodyParser());
     app.use(validator({
       body: object().keys({
@@ -209,10 +206,10 @@ describe('stripUnknown', () => {
     }, { stripUnknown: true }));
 
     app.use((ctx) => {
-      ctx.body = ctx.request.body;
+      body = ctx.request.body;
     });
 
-    const response = await request(app.listen())
+    await request(app.listen())
       .post('/')
       .send({
         username: 'Peter',
@@ -220,8 +217,7 @@ describe('stripUnknown', () => {
         isActive: true,
       });
 
-    expect(response.status).to.equal(200);
-    expect(response.body).to.deep.equal({
+    expect(body).to.deep.equal({
       username: 'Peter',
       age: 18,
     });
@@ -232,22 +228,25 @@ describe('koa-mount', () => {
   it('should work together', async () => {
     const app = new Koa();
 
-    app.use(errorHandler);
+    let error;
+    app.use(async (ctx, next) => {
+      try {
+        await next();
+      } catch (err) {
+        error = err;
+      }
+    });
     app.use(mount('/api', validator({
       query: object().keys({
         username: string().required(),
       }),
     })));
 
-    const response = await request(app.listen())
+    await request(app.listen())
         .get('/api');
 
-    expect(response.status).to.equal(400);
-    expect(response.body).to.deep.equal({
-      error: true,
-      name: 'ValidationError',
-      message: 'child "username" fails because ["username" is required]',
-    });
+    expect(error.name).to.equal('ValidationError');
+    expect(error.message).to.equal('child "username" fails because ["username" is required]');
   });
 });
 
@@ -255,7 +254,8 @@ describe('koa-compose', () => {
   it('should work together', async () => {
     const app = new Koa();
 
-    app.use(errorHandler);
+    let body;
+
     app.use(compose([
       validator({
         query: object().keys({
@@ -263,18 +263,17 @@ describe('koa-compose', () => {
         }),
       }),
       async (ctx) => {
-        ctx.body = ctx.request.query;
+        body = ctx.request.query;
       },
     ]));
 
-    const response = await request(app.listen())
+    await request(app.listen())
       .get('/')
       .query({
         username: 'Peter',
       });
 
-    expect(response.status).to.equal(200);
-    expect(response.body).to.deep.equal({
+    expect(body).to.deep.equal({
       username: 'Peter',
     });
   });
@@ -282,6 +281,8 @@ describe('koa-compose', () => {
 
 describe('koa-router', () => {
   it('should work with routing', async () => {
+    let body;
+
     const router = new Router();
     router.get(
       '/api',
@@ -291,28 +292,28 @@ describe('koa-router', () => {
         }),
       }),
       async (ctx) => {
-        ctx.body = ctx.request.query;
+        body = ctx.request.query;
       }
     );
 
     const app = new Koa();
-    app.use(errorHandler);
     app.use(router.middleware());
 
-    const response = await request(app.listen())
+    await request(app.listen())
       .get('/api')
       .query({
         username: 'Peter',
       });
 
-    expect(response.status).to.equal(200);
-    expect(response.body).to.deep.equal({
+    expect(body).to.deep.equal({
       username: 'Peter',
     });
   });
 
   describe('params', () => {
     it('should pass when value is valid', async () => {
+      let params;
+
       const router = new Router();
       router.get(
         '/api/:username',
@@ -322,19 +323,17 @@ describe('koa-router', () => {
           }),
         }),
         async (ctx) => {
-          ctx.body = ctx.params;
+          params = ctx.params;
         }
       );
 
       const app = new Koa();
-      app.use(errorHandler);
       app.use(router.middleware());
 
-      const response = await request(app.listen())
+      await request(app.listen())
         .get('/api/Peter');
 
-      expect(response.status).to.equal(200);
-      expect(response.body).to.deep.equal({
+      expect(params).to.deep.equal({
         username: 'Peter',
       });
     });
@@ -354,20 +353,24 @@ describe('koa-router', () => {
       );
 
       const app = new Koa();
-      app.use(errorHandler);
+      let error;
+      app.use(async (ctx, next) => {
+        try {
+          await next();
+        } catch (err) {
+          error = err;
+        }
+      });
       app.use(router.middleware());
 
-      const response = await request(app.listen())
+      await request(app.listen())
         .get('/api/Peter');
 
-      expect(response.status).to.equal(400);
-      expect(response.body).to.deep.equal({
-        error: true,
-        name: 'ValidationError',
-        message:
-          'child "username" fails because ' +
-          '["username" length must be less than or equal to 4 characters long]',
-      });
+      expect(error.name).to.equal('ValidationError');
+      expect(error.message).to.equal(
+        'child "username" fails because ' +
+        '["username" length must be less than or equal to 4 characters long]'
+      );
     });
   });
 });
