@@ -14,8 +14,6 @@
 $ npm install koa-context-validator
 ```
 
-Note: only support koa2.
-
 ## Usage
 
 #### validate query
@@ -160,6 +158,27 @@ app.use(validator({
     username: string().required(),
   }),
 }, { stripUnknown: true }));
+```
+
+## Koa 1.x
+
+Use `convert.back` from `koa-convert`.
+
+```js
+import koa from 'koa'; // koa 1.x
+import convert from 'koa-convert';
+import validator, {
+  object,
+  string,
+} from 'koa-context-validator';
+
+const app = koa();
+
+app.use(convert.back(validator({
+  query: object().keys({
+    username: string().required(),
+  }),
+})));
 ```
 
 ## API
