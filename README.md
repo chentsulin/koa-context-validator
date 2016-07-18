@@ -177,7 +177,7 @@ A object which has optional `query`, `body`, `headers` and `params` schema to va
 
 Just be passed to Joi's validate function as options:
 
-https://github.com/hapijs/joi/blob/v9.0.0-2/API.md#validatevalue-schema-options-callback.
+https://github.com/hapijs/joi/blob/master/API.md#validatevalue-schema-options-callback.
 
 ### any
 ### alternatives
