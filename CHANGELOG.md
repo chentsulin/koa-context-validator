@@ -1,3 +1,10 @@
+# 0.2.0 (2016/8/20)
+
+#### Improvement
+
+- Performance improvement
+
+
 # 0.1.3 (2016/7/18)
 
 #### Fixed
