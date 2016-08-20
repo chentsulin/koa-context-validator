@@ -22,25 +22,23 @@ function isContextOnlyKey(key) {
   return key === 'params';
 }
 
-const validator = (schema, opts) => (ctx, next) => {
+const validator = (schema, opts) => async (ctx, next) => {
   const keys = Object.keys(schema);
-  const promises = [];
   for (let i = 0, len = keys.length; i < len; i++) {
     const key = keys[i];
     const source = isContextOnlyKey(key) ? ctx : ctx.request;
-    promises.push(validate( // eslint-disable-line no-param-reassign
+    const validated = await validate( // eslint-disable-line no-param-reassign
       source[key],
       schema[key],
       opts
-    ).then(validated => {
-      Object.defineProperty(source, [key], {
-        get() {
-          return validated;
-        },
-      });
-    }));
+    );
+    Object.defineProperty(source, [key], {
+      get() {
+        return validated;
+      },
+    });
   }
-  return Promise.all(promises).then(() => next());
+  await next();
 };
 
 export default validator;
