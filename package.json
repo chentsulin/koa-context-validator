@@ -26,7 +26,6 @@
     "joi"
   ],
   "dependencies": {
-    "babel-runtime": "^6.9.2",
     "joi": "^9.0.1",
     "thenify": "^3.2.0"
   },
@@ -39,6 +38,7 @@
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.9.0",
+    "babel-runtime": "^6.9.2",
     "chai": "^3.5.0",
     "eslint": "^2.13.1",
     "eslint-config-airbnb-base": "^3.0.1",
@@ -61,7 +61,7 @@
   "scripts": {
     "clean": "rimraf lib dist .nyc_output",
     "build": "npm run clean && babel src -d lib --ignore __tests__",
-    "build:benchmark": "rimraf benchmark/build && babel benchmark/source -d benchmark/build",
+    "build:benchmark": "rimraf benchmark/build && babel --extends benchmark/.babelrc benchmark/source -d benchmark/build",
     "testonly": "NODE_ENV=test mocha $npm_package_options_mocha",
     "test": "npm run lint && npm run testonly",
     "test:cov": "nyc npm test",
