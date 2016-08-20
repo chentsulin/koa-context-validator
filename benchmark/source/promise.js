@@ -28,7 +28,7 @@ const validator = (schema, opts) => (ctx, next) => {
   for (let i = 0, len = keys.length; i < len; i++) {
     const key = keys[i];
     const source = isContextOnlyKey(key) ? ctx : ctx.request;
-    promises.push(validate( // eslint-disable-line no-param-reassign
+    promises.push(validate(
       source[key],
       schema[key],
       opts

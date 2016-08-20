@@ -61,6 +61,7 @@
   "scripts": {
     "clean": "rimraf lib dist .nyc_output",
     "build": "npm run clean && babel src -d lib --ignore __tests__",
+    "build:benchmark": "rimraf benchmark/build && babel benchmark/source -d benchmark/build",
     "testonly": "NODE_ENV=test mocha $npm_package_options_mocha",
     "test": "npm run lint && npm run testonly",
     "test:cov": "nyc npm test",
