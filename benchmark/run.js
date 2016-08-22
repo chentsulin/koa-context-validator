@@ -64,7 +64,7 @@ const format = (ms) => {
 
 console.log(`${ROUND} rounds to run..`);
 
-const results = [[], [], []];
+const results = [[], []];
 
 let p = Promise.resolve();
 
@@ -108,9 +108,7 @@ p
   console.log(results[1].map(format));
   const promiseSum = results[1].reduce((acc, next) => acc + next, 0);
   console.log('promise Average: ', format(promiseSum / ROUND));
-  console.log(results[2].map(format));
-  const fastAsyncSum = results[2].reduce((acc, next) => acc + next, 0);
-  console.log('fast-async Average: ', format(fastAsyncSum / ROUND));
+
   process.exit(0);
 })
 .catch(err => {
