@@ -38,7 +38,7 @@ const ctx = {
 
 const ROUND = +process.argv[2] || 100;
 
-const format = (ms) => {
+const format = ms => {
   let remain = ms;
   let formated = '';
 

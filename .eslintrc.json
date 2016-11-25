@@ -6,7 +6,10 @@
     "mocha": true
   },
   "rules": {
-    "func-names": 0,
-    "import/no-extraneous-dependencies": 0
+    "arrow-parens": ["error", "as-needed"],
+    "comma-dangle": "off",
+    "func-names": "off",
+    "no-plusplus": "off",
+    "import/no-extraneous-dependencies": "off"
   }
 }
