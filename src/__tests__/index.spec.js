@@ -48,7 +48,7 @@ describe('should pass when value is valid', () => {
       }),
     }));
 
-    app.use((ctx) => {
+    app.use(ctx => {
       query = ctx.request.query;
     });
 
@@ -76,7 +76,7 @@ describe('should pass when value is valid', () => {
       }),
     }));
 
-    app.use((ctx) => {
+    app.use(ctx => {
       body = ctx.request.body;
     });
 
@@ -104,7 +104,7 @@ describe('should pass when value is valid', () => {
       }).unknown(),
     }));
 
-    app.use((ctx) => {
+    app.use(ctx => {
       headers = ctx.request.headers;
     });
 
@@ -205,7 +205,7 @@ describe('stripUnknown', () => {
       }),
     }, { stripUnknown: true }));
 
-    app.use((ctx) => {
+    app.use(ctx => {
       body = ctx.request.body;
     });
 
@@ -262,7 +262,7 @@ describe('koa-compose', () => {
           username: string().required(),
         }),
       }),
-      async (ctx) => {
+      async ctx => {
         body = ctx.request.query;
       },
     ]));
@@ -291,7 +291,7 @@ describe('koa-router', () => {
           username: string().required(),
         }),
       }),
-      async (ctx) => {
+      async ctx => {
         body = ctx.request.query;
       }
     );
@@ -322,7 +322,7 @@ describe('koa-router', () => {
             username: string().required(),
           }),
         }),
-        async (ctx) => {
+        async ctx => {
           params = ctx.params;
         }
       );
@@ -347,7 +347,7 @@ describe('koa-router', () => {
             username: string().min(1).max(4).required(),
           }),
         }),
-        async (ctx) => {
+        async ctx => {
           ctx.body = ctx.params;
         }
       );
