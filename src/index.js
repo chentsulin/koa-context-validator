@@ -40,7 +40,7 @@ const validator = (schema, opts) => (ctx, next) => {
       });
     }));
   }
-  return Promise.all(promises).then(() => next());
+  return Promise.all(promises).then(next);
 };
 
 export default validator;
