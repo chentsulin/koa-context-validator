@@ -33,7 +33,7 @@ const validator = (schema, opts) => (ctx, next) => {
       schema[key],
       opts
     ).then(validated => {
-      Object.defineProperty(source, [key], {
+      Object.defineProperty(source, key, {
         get() {
           return validated;
         },
