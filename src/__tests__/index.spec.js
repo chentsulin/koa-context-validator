@@ -1,6 +1,6 @@
 /* eslint no-unused-expressions: 0, no-param-reassign: 0, newline-per-chained-call: 0 */
 import { expect } from 'chai';
-import request from 'supertest-as-promised';
+import request from 'supertest';
 import Koa from 'koa';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
