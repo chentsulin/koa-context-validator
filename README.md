@@ -198,6 +198,7 @@ Just be passed to Joi's validate function as options:
 
 https://github.com/hapijs/joi/blob/master/API.md#validatevalue-schema-options-callback.
 
+### Joi
 ### any
 ### alternatives
 ### array
@@ -223,4 +224,3 @@ MIT © [C.T. Lin](https://github.com/chentsulin/koa-context-validator)
 [coveralls-url]: https://coveralls.io/r/chentsulin/koa-context-validator?branch=master
 [david_img]: https://david-dm.org/chentsulin/koa-context-validator.svg
 [david_site]: https://david-dm.org/chentsulin/koa-context-validator
-
