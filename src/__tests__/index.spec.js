@@ -7,6 +7,7 @@ import bodyParser from 'koa-bodyparser';
 import mount from 'koa-mount';
 import compose from 'koa-compose';
 import validator, {
+  Joi,
   any,
   alternatives,
   array,
@@ -22,6 +23,7 @@ import validator, {
 } from '../';
 
 it('should export Joi types', () => {
+  expect(Joi).to.exist;
   expect(any).to.exist;
   expect(alternatives).to.exist;
   expect(array).to.exist;
