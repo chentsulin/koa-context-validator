@@ -22,7 +22,9 @@ function isContextOnlyKey(key) {
   return key === 'params';
 }
 
-const validator = (schema, opts) => (ctx, next) => {
+const validator = (schema, opts_) => (ctx, next) => {
+  const opts = Object.assign({}, opts_);
+  opts.context = Object.assign({}, ctx, opts.context);
   const keys = Object.keys(schema);
   const promises = [];
   for (let i = 0, len = keys.length; i < len; i++) {

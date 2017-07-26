@@ -224,6 +224,42 @@ describe('stripUnknown', () => {
   });
 });
 
+describe('context', () => {
+  it('should merge Koa context into context option', async () => {
+    const app = new Koa();
+
+    let body;
+
+    app.use(async (ctx, next) => {
+      ctx.defaultAge = 42;
+      await next();
+    });
+
+    app.use(bodyParser());
+    app.use(validator({
+      body: object().keys({
+        username: string().default(ref('$defaultUsername')),
+        age: number().default(ref('$defaultAge')),
+      }),
+    }, {
+      context: { defaultUsername: 'anonymous' },
+    }));
+
+    app.use(ctx => {
+      body = ctx.request.body;
+    });
+
+    await request(app.listen())
+      .post('/')
+      .send({});
+
+    expect(body).to.deep.equal({
+      username: 'anonymous',
+      age: 42,
+    });
+  });
+});
+
 describe('koa-mount', () => {
   it('should work together', async () => {
     const app = new Koa();
