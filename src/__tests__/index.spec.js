@@ -6,6 +6,7 @@ import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import mount from 'koa-mount';
 import compose from 'koa-compose';
+import Joi_ from 'joi';
 import validator, {
   Joi,
   any,
@@ -23,7 +24,7 @@ import validator, {
 } from '../';
 
 it('should export Joi types', () => {
-  expect(Joi).to.exist;
+  expect(Joi).to.equal(Joi_);
   expect(any).to.exist;
   expect(alternatives).to.exist;
   expect(array).to.exist;
