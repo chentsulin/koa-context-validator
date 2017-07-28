@@ -1,3 +1,12 @@
+0.4.1 / 2017-07-28
+==================
+- [fix] Fix Joi export 
+
+0.4.0 / 2017-07-26
+==================
+- [new] Export `Joi`
+- [new] Merge Koa context into Joi context option
+
 0.3.0 / 2016-11-30
 ==================
 - [deps] Update `joi` to v10
