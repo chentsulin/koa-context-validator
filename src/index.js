@@ -4,7 +4,7 @@ import thenify from 'thenify';
 const validate = thenify(_validate);
 
 export {
-  _validate as Joi,
+  default as Joi,
   any,
   alternatives,
   array,
