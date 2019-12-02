@@ -6,7 +6,7 @@ import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import mount from 'koa-mount';
 import compose from 'koa-compose';
-import Joi_ from 'joi';
+import Joi_ from '@hapi/joi';
 import validator, {
   Joi,
   any,

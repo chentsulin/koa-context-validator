@@ -1,4 +1,4 @@
-import { validate as _validate } from 'joi';
+import { validate as _validate } from '@hapi/joi';
 import thenify from 'thenify';
 
 const validate = thenify(_validate);
@@ -17,7 +17,7 @@ export {
   string,
   ref,
   isRef,
-} from 'joi';
+} from '@hapi/joi';
 
 function isContextOnlyKey(key) {
   return key === 'params';
