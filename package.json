@@ -11,7 +11,7 @@
     "url": "github.com/chentsulin/koa-context-validator"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=8"
   },
   "files": [
     "lib",
@@ -26,7 +26,7 @@
     "joi"
   ],
   "dependencies": {
-    "joi": "^10.0.1",
+    "@hapi/joi": "^16.1.8",
     "thenify": "^3.2.1"
   },
   "devDependencies": {
