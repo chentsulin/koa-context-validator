@@ -1,65 +1,50 @@
-/* eslint no-unused-expressions: 0, no-param-reassign: 0, newline-per-chained-call: 0 */
+/* eslint no-unused-expressions: 0 */
 import { expect } from 'chai';
-import request from 'supertest-as-promised';
+import request from 'supertest';
 import Koa from 'koa';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import mount from 'koa-mount';
 import compose from 'koa-compose';
 import Joi_ from 'joi';
-import validator, {
-  Joi,
-  any,
-  alternatives,
-  array,
-  boolean,
-  binary,
-  date,
-  func,
-  number,
-  object,
-  string,
-  ref,
-  isRef,
-} from '../';
+import validator, { Joi, ref } from '..';
 
-it('should export Joi types', () => {
+const setup = middlewareArray => {
+  const app = new Koa();
+
+  middlewareArray.forEach(middleware => {
+    app.use(middleware);
+  });
+
+  return app.listen();
+};
+
+it('should export Joi', () => {
   expect(Joi).to.equal(Joi_);
-  expect(any).to.exist;
-  expect(alternatives).to.exist;
-  expect(array).to.exist;
-  expect(boolean).to.exist;
-  expect(binary).to.exist;
-  expect(date).to.exist;
-  expect(func).to.exist;
-  expect(number).to.exist;
-  expect(object).to.exist;
-  expect(string).to.exist;
   expect(ref).to.exist;
-  expect(isRef).to.exist;
 });
 
 describe('should pass when value is valid', () => {
   it('query', async () => {
-    const app = new Koa();
-
     let query;
 
-    app.use(validator({
-      query: object().keys({
-        username: string().required(),
+    const server = setup([
+      validator({
+        query: Joi.object().keys({
+          username: Joi.string().required(),
+        }),
       }),
-    }));
+      ctx => {
+        query = ctx.request.query;
+      }
+    ]);
 
-    app.use(ctx => {
-      query = ctx.request.query;
-    });
-
-    await request(app.listen())
+    await request(server)
       .get('/')
       .query({
         username: 'Peter',
       });
+    server.close();
 
     expect(query).to.deep.equal({
       username: 'Peter',
@@ -67,28 +52,28 @@ describe('should pass when value is valid', () => {
   });
 
   it('body', async () => {
-    const app = new Koa();
-
     let body;
 
-    app.use(bodyParser());
-    app.use(validator({
-      body: object().keys({
-        username: string().required(),
-        age: number().required(),
+    const server = setup([
+      bodyParser(),
+      validator({
+        body: Joi.object().keys({
+          username: Joi.string().required(),
+          age: Joi.number().required(),
+        }),
       }),
-    }));
+      ctx => {
+        body = ctx.request.body;
+      }
+    ]);
 
-    app.use(ctx => {
-      body = ctx.request.body;
-    });
-
-    await request(app.listen())
+    await request(server)
       .post('/')
       .send({
         username: 'Peter',
         age: 18,
       });
+    server.close();
 
     expect(body).to.deep.equal({
       username: 'Peter',
@@ -97,23 +82,23 @@ describe('should pass when value is valid', () => {
   });
 
   it('headers', async () => {
-    const app = new Koa();
-
     let headers;
 
-    app.use(validator({
-      headers: object().keys({
-        username: string().required(),
-      }).unknown(),
-    }));
+    const server = setup([
+      validator({
+        headers: Joi.object().keys({
+          username: Joi.string().required(),
+        }).unknown(),
+      }),
+      ctx => {
+        headers = ctx.request.headers;
+      }
+    ]);
 
-    app.use(ctx => {
-      headers = ctx.request.headers;
-    });
-
-    await request(app.listen())
+    await request(server)
       .get('/')
       .set('username', 'Peter');
+    server.close();
 
     expect(headers).to.have.property('username').and.equal('Peter');
   });
@@ -121,104 +106,110 @@ describe('should pass when value is valid', () => {
 
 describe('should throw when value is invalid', () => {
   it('query', async () => {
-    const app = new Koa();
-
     let error;
-    app.use(async (ctx, next) => {
-      try {
-        await next();
-      } catch (err) {
-        error = err;
-      }
-    });
-    app.use(validator({
-      query: object().keys({
-        username: string().required(),
-      }),
-    }));
 
-    await request(app.listen())
-        .get('/');
+    const server = setup([
+      async (ctx, next) => {
+        try {
+          await next();
+        } catch (err) {
+          error = err;
+        }
+      },
+      validator({
+        query: Joi.object().keys({
+          username: Joi.string().required(),
+        }),
+      })
+    ]);
+
+    await request(server)
+      .get('/');
+    server.close();
 
     expect(error.name).to.equal('ValidationError');
-    expect(error.message).to.equal('child "username" fails because ["username" is required]');
+    expect(error.message).to.equal('"username" is required');
   });
 
   it('body', async () => {
-    const app = new Koa();
-
     let error;
-    app.use(async (ctx, next) => {
-      try {
-        await next();
-      } catch (err) {
-        error = err;
-      }
-    });
-    app.use(bodyParser());
-    app.use(validator({
-      body: object().keys({
-        username: string().required(),
-      }),
-    }));
 
-    await request(app.listen())
+    const server = setup([
+      async (ctx, next) => {
+        try {
+          await next();
+        } catch (err) {
+          error = err;
+        }
+      },
+      bodyParser(),
+      validator({
+        body: Joi.object().keys({
+          username: Joi.string().required(),
+        }),
+      })
+    ]);
+
+    await request(server)
       .post('/');
+    server.close();
 
     expect(error.name).to.equal('ValidationError');
-    expect(error.message).to.equal('child "username" fails because ["username" is required]');
+    expect(error.message).to.equal('"username" is required');
   });
 
   it('headers', async () => {
-    const app = new Koa();
-
     let error;
-    app.use(async (ctx, next) => {
-      try {
-        await next();
-      } catch (err) {
-        error = err;
-      }
-    });
-    app.use(validator({
-      headers: object().keys({
-        username: string().required(),
-      }).unknown(),
-    }));
 
-    await request(app.listen())
+    const server = setup([
+      async (ctx, next) => {
+        try {
+          await next();
+        } catch (err) {
+          error = err;
+        }
+      },
+      validator({
+        headers: Joi.object().keys({
+          username: Joi.string().required(),
+        }).unknown(),
+      })
+    ]);
+
+    await request(server)
       .get('/');
+    server.close();
 
     expect(error.name).to.equal('ValidationError');
-    expect(error.message).to.equal('child "username" fails because ["username" is required]');
+    expect(error.message).to.equal('"username" is required');
   });
 });
 
 describe('stripUnknown', () => {
   it('should pass only valid value when stripUnknown is true', async () => {
-    const app = new Koa();
-
     let body;
 
-    app.use(bodyParser());
-    app.use(validator({
-      body: object().keys({
-        username: string().required(),
-        age: number().required(),
-      }),
-    }, { stripUnknown: true }));
+    const server = setup([
+      bodyParser(),
+      validator({
+        body: Joi.object().keys({
+          username: Joi.string().required(),
+          age: Joi.number().required(),
+        }),
+      }, { stripUnknown: true }),
+      ctx => {
+        body = ctx.request.body;
+      }
+    ]);
 
-    app.use(ctx => {
-      body = ctx.request.body;
-    });
-
-    await request(app.listen())
+    await request(server)
       .post('/')
       .send({
         username: 'Peter',
         age: 18,
         isActive: true,
       });
+    server.close();
 
     expect(body).to.deep.equal({
       username: 'Peter',
@@ -229,32 +220,31 @@ describe('stripUnknown', () => {
 
 describe('context', () => {
   it('should merge Koa context into context option', async () => {
-    const app = new Koa();
-
     let body;
 
-    app.use(async (ctx, next) => {
-      ctx.defaultAge = 42;
-      await next();
-    });
-
-    app.use(bodyParser());
-    app.use(validator({
-      body: object().keys({
-        username: string().default(ref('$defaultUsername')),
-        age: number().default(ref('$defaultAge')),
+    const server = setup([
+      async (ctx, next) => {
+        ctx.defaultAge = 42;
+        await next();
+      },
+      bodyParser(),
+      validator({
+        body: Joi.object().keys({
+          username: Joi.string().default(ref('$defaultUsername')),
+          age: Joi.number().default(ref('$defaultAge')),
+        }),
+      }, {
+        context: { defaultUsername: 'anonymous' },
       }),
-    }, {
-      context: { defaultUsername: 'anonymous' },
-    }));
+      ctx => {
+        body = ctx.request.body;
+      }
+    ]);
 
-    app.use(ctx => {
-      body = ctx.request.body;
-    });
-
-    await request(app.listen())
+    await request(server)
       .post('/')
       .send({});
+    server.close();
 
     expect(body).to.deep.equal({
       username: 'anonymous',
@@ -265,52 +255,55 @@ describe('context', () => {
 
 describe('koa-mount', () => {
   it('should work together', async () => {
-    const app = new Koa();
-
     let error;
-    app.use(async (ctx, next) => {
-      try {
-        await next();
-      } catch (err) {
-        error = err;
-      }
-    });
-    app.use(mount('/api', validator({
-      query: object().keys({
-        username: string().required(),
-      }),
-    })));
 
-    await request(app.listen())
-        .get('/api');
+    const server = setup([
+      async (ctx, next) => {
+        try {
+          await next();
+        } catch (err) {
+          error = err;
+        }
+      },
+      mount('/api', validator({
+        query: Joi.object().keys({
+          username: Joi.string().required(),
+        }),
+      }))
+    ]);
+
+    await request(server)
+      .get('/api');
+    server.close();
 
     expect(error.name).to.equal('ValidationError');
-    expect(error.message).to.equal('child "username" fails because ["username" is required]');
+    expect(error.message).to.equal('"username" is required');
   });
 });
 
 describe('koa-compose', () => {
   it('should work together', async () => {
-    const app = new Koa();
-
     let body;
 
-    app.use(compose([
-      validator({
-        query: object().keys({
-          username: string().required(),
+    const server = setup([
+      compose([
+        validator({
+          query: Joi.object().keys({
+            username: Joi.string().required(),
+          }),
         }),
-      }),
-      async ctx => {
-        body = ctx.request.query;
-      },
-    ]));
+        async ctx => {
+          body = ctx.request.query;
+        },
+      ])
+    ]);
 
-    await request(app.listen())
+    await request(server)
       .get('/')
       .query({
         username: 'Peter',
       });
+    server.close();
 
     expect(body).to.deep.equal({
       username: 'Peter',
@@ -326,8 +319,8 @@ describe('koa-router', () => {
     router.get(
       '/api',
       validator({
-        query: object().keys({
-          username: string().required(),
+        query: Joi.object().keys({
+          username: Joi.string().required(),
         }),
       }),
       async ctx => {
@@ -335,14 +328,14 @@ describe('koa-router', () => {
       }
     );
 
-    const app = new Koa();
-    app.use(router.middleware());
+    const server = setup([router.middleware()]);
 
-    await request(app.listen())
+    await request(server)
       .get('/api')
       .query({
         username: 'Peter',
       });
+    server.close();
 
     expect(body).to.deep.equal({
       username: 'Peter',
@@ -357,8 +350,8 @@ describe('koa-router', () => {
       router.get(
         '/api/:username',
         validator({
-          params: object().keys({
-            username: string().required(),
+          params: Joi.object().keys({
+            username: Joi.string().required(),
           }),
         }),
         async ctx => {
@@ -366,11 +359,11 @@ describe('koa-router', () => {
         }
       );
 
-      const app = new Koa();
-      app.use(router.middleware());
+      const server = setup([router.middleware()]);
 
-      await request(app.listen())
+      await request(server)
         .get('/api/Peter');
+      server.close();
 
       expect(params).to.deep.equal({
         username: 'Peter',
@@ -382,8 +375,8 @@ describe('koa-router', () => {
       router.get(
         '/api/:username',
         validator({
-          params: object().keys({
-            username: string().min(1).max(4).required(),
+          params: Joi.object().keys({
+            username: Joi.string().min(1).max(4).required(),
           }),
         }),
         async ctx => {
@@ -391,24 +384,25 @@ describe('koa-router', () => {
         }
       );
 
-      const app = new Koa();
       let error;
-      app.use(async (ctx, next) => {
-        try {
-          await next();
-        } catch (err) {
-          error = err;
-        }
-      });
-      app.use(router.middleware());
+      const server = setup([
+        async (ctx, next) => {
+          try {
+            await next();
+          } catch (err) {
+            error = err;
+          }
+        },
+        router.middleware()
+      ]);
 
-      await request(app.listen())
+      await request(server)
         .get('/api/Peter');
+      server.close();
 
       expect(error.name).to.equal('ValidationError');
       expect(error.message).to.equal(
-        'child "username" fails because ' +
-        '["username" length must be less than or equal to 4 characters long]'
+        '"username" length must be less than or equal to 4 characters long'
       );
     });
   });
