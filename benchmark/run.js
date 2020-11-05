@@ -4,19 +4,16 @@
  * node run.js 10
  *
  */
-const {
-  object,
-  string,
-} = require('joi');
+const Joi = require('joi');
 const async = require('./build/async').default; // eslint-disable-line import/no-unresolved
 const promise = require('./build/promise').default; // eslint-disable-line import/no-unresolved
 
 const schema = {
-  body: object().keys({
-    name: string().required(),
-    tel: string().required(),
-    addr: string().required(),
-    email: string().email().required(),
+  body: Joi.object().keys({
+    name: Joi.string().required(),
+    tel: Joi.string().required(),
+    addr: Joi.string().required(),
+    email: Joi.string().email().required(),
   }),
 };
 
@@ -31,7 +28,7 @@ const ctx = {
       name: 'CPH',
       tel: '0912345678',
       addr: '..',
-      email: 't@t.t',
+      email: 't@t.com',
     },
   },
 };
@@ -101,17 +98,17 @@ for (let i = 0; i < ROUND; i++) {
 }
 
 p
-.then(() => {
-  console.log(results[0].map(format));
-  const asyncSum = results[0].reduce((acc, next) => acc + next, 0);
-  console.log('async Average: ', format(asyncSum / ROUND));
-  console.log(results[1].map(format));
-  const promiseSum = results[1].reduce((acc, next) => acc + next, 0);
-  console.log('promise Average: ', format(promiseSum / ROUND));
+  .then(() => {
+    console.log(results[0].map(format));
+    const asyncSum = results[0].reduce((acc, next) => acc + next, 0);
+    console.log('async Average: ', format(asyncSum / ROUND));
+    console.log(results[1].map(format));
+    const promiseSum = results[1].reduce((acc, next) => acc + next, 0);
+    console.log('promise Average: ', format(promiseSum / ROUND));
 
-  process.exit(0);
-})
-.catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+    process.exit(0);
+  })
+  .catch(err => {
+    console.error(err);
+    process.exit(1);
+  });

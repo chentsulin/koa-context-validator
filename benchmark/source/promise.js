@@ -1,8 +1,3 @@
-import { validate as _validate } from 'joi';
-import thenify from 'thenify';
-
-const validate = thenify(_validate);
-
 export {
   any,
   alternatives,
@@ -28,9 +23,8 @@ const validator = (schema, opts) => (ctx, next) => {
   for (let i = 0, len = keys.length; i < len; i++) {
     const key = keys[i];
     const source = isContextOnlyKey(key) ? ctx : ctx.request;
-    promises.push(validate(
+    promises.push(schema[key].validateAsync(
       source[key],
-      schema[key],
       opts
     ).then(validated => {
       Object.defineProperty(source, [key], {

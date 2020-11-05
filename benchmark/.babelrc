@@ -1,13 +1,13 @@
 {
-	"presets": ["es2015", "stage-0"],
-	"plugins": [
-		"add-module-exports",
-		[
-			"transform-runtime",
-			{
-				"polyfill": false,
-				"regenerator": true
-			}
-		]
-	]
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "10",
+          "esmodules": true
+        }
+      }
+    ]
+  ]
 }

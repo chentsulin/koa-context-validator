@@ -7,89 +7,83 @@
 
 > A robust context validator for koajs. Use `Joi` behind the scenes.
 
-
 ## Install
 
-```
+```console
 $ npm install koa-context-validator
 ```
 
 ## Usage
 
-#### validate query
+### validate query
 
 ```js
 import Koa from 'koa';
 import validator, {
-  object,
-  string,
+  Joi
 } from 'koa-context-validator';
 
 const app = new Koa();
 
 app.use(validator({
-  query: object().keys({
-    username: string().required(),
+  query: Joi.object().keys({
+    username: Joi.string().required(),
   }),
 }));
 ```
 
-#### validate body
+### validate body
 
 ```js
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import validator, {
-  object,
-  string,
-  number,
+  Joi
 } from 'koa-context-validator';
 
 const app = new Koa();
 
 app.use(bodyParser());
 app.use(validator({
-  body: object().keys({
-    username: string().required(),
-    age: number().required(),
+  body: Joi.object().keys({
+    username: Joi.string().required(),
+    age: Joi.number().required(),
   }),
 }));
 ```
 
-#### validate headers
+### validate headers
 
 ```js
 import Koa from 'koa';
 import validator, {
-  object,
-  string,
+  Joi
 } from 'koa-context-validator';
 
 const app = new Koa();
 
 app.use(validator({
-  headers: object().keys({
-    username: string().required(),
+  headers: Joi.object().keys({
+    username: Joi.string().required(),
   }).unknown(),
 }));
 ```
 
-#### with koa-compose
+### with koa-compose
 
 ```js
 import Koa from 'koa';
 import compose from 'koa-compose';
 import validator, {
-  object,
-  string,
+  Joi
 } from 'koa-context-validator';
 
 const app = new Koa();
 
 app.use(compose([
   validator({
-    query: object().keys({
-      username: string().required(),
+    query: Joi.object().keys({
+      username: Joi.string().required(),
     }),
   }),
   async (ctx) => {
@@ -98,41 +92,39 @@ app.use(compose([
 ]));
 ```
 
-#### with koa-mount
+### with koa-mount
 
 ```js
 import Koa from 'koa';
 import mount from 'koa-mount';
 import validator, {
-  object,
-  string,
+  Joi
 } from 'koa-context-validator';
 
 const app = new Koa();
 
 app.use(mount('/api', validator({
-  query: object().keys({
-    username: string().required(),
+  query: Joi.object().keys({
+    username: Joi.string().required(),
   }),
 })));
 ```
 
-#### with koa-router
+### with koa-router
 
 ```js
 import Koa from 'koa';
 import Router from 'koa-router';
 import validator, {
-  object,
-  string,
+  Joi
 } from 'koa-context-validator';
 
 const router = new Router();
 router.get(
   '/api/:username',
   validator({
-    params: object().keys({
-      username: string().required(),
+    params: Joi.object().keys({
+      username: Joi.string().required(),
     }),
   }),
   async (ctx) => {
@@ -144,18 +136,17 @@ const app = new Koa();
 app.use(router.middleware());
 ```
 
-#### stripUnknown
+### stripUnknown
 
 ```js
 import Koa from 'koa';
 import validator, {
-  object,
-  string,
+  Joi
 } from 'koa-context-validator';
 
 app.use(validator({
-  query: object().keys({
-    username: string().required(),
+  query: Joi.object().keys({
+    username: Joi.string().required(),
   }),
 }, { stripUnknown: true }));
 ```
@@ -168,15 +159,14 @@ Use `convert.back` from `koa-convert`.
 import koa from 'koa'; // koa 1.x
 import convert from 'koa-convert';
 import validator, {
-  object,
-  string,
+  Joi
 } from 'koa-context-validator';
 
 const app = koa();
 
 app.use(convert.back(validator({
-  query: object().keys({
-    username: string().required(),
+  query: Joi.object().keys({
+    username: Joi.string().required(),
   }),
 })));
 ```
@@ -199,18 +189,7 @@ Just be passed to Joi's validate function as options:
 https://github.com/hapijs/joi/blob/master/API.md#validatevalue-schema-options-callback.
 
 ### Joi
-### any
-### alternatives
-### array
-### boolean
-### binary
-### date
-### func
-### number
-### object
-### string
 ### ref
-### isRef
 
 ## License
 
