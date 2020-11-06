@@ -19,17 +19,17 @@ $ npm install koa-context-validator
 
 ```js
 import Koa from 'koa';
-import validator, {
-  Joi
-} from 'koa-context-validator';
+import validator, { Joi } from 'koa-context-validator';
 
 const app = new Koa();
 
-app.use(validator({
-  query: Joi.object().keys({
-    username: Joi.string().required(),
-  }),
-}));
+app.use(
+  validator({
+    query: Joi.object().keys({
+      username: Joi.string().required(),
+    }),
+  })
+);
 ```
 
 ### validate body
@@ -37,36 +37,38 @@ app.use(validator({
 ```js
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
-import validator, {
-  Joi
-} from 'koa-context-validator';
+import validator, { Joi } from 'koa-context-validator';
 
 const app = new Koa();
 
 app.use(bodyParser());
-app.use(validator({
-  body: Joi.object().keys({
-    username: Joi.string().required(),
-    age: Joi.number().required(),
-  }),
-}));
+app.use(
+  validator({
+    body: Joi.object().keys({
+      username: Joi.string().required(),
+      age: Joi.number().required(),
+    }),
+  })
+);
 ```
 
 ### validate headers
 
 ```js
 import Koa from 'koa';
-import validator, {
-  Joi
-} from 'koa-context-validator';
+import validator, { Joi } from 'koa-context-validator';
 
 const app = new Koa();
 
-app.use(validator({
-  headers: Joi.object().keys({
-    username: Joi.string().required(),
-  }).unknown(),
-}));
+app.use(
+  validator({
+    headers: Joi.object()
+      .keys({
+        username: Joi.string().required(),
+      })
+      .unknown(),
+  })
+);
 ```
 
 ### with koa-compose
@@ -74,22 +76,22 @@ app.use(validator({
 ```js
 import Koa from 'koa';
 import compose from 'koa-compose';
-import validator, {
-  Joi
-} from 'koa-context-validator';
+import validator, { Joi } from 'koa-context-validator';
 
 const app = new Koa();
 
-app.use(compose([
-  validator({
-    query: Joi.object().keys({
-      username: Joi.string().required(),
+app.use(
+  compose([
+    validator({
+      query: Joi.object().keys({
+        username: Joi.string().required(),
+      }),
     }),
-  }),
-  async (ctx) => {
-    ctx.body = ctx.request.query;
-  },
-]));
+    async (ctx) => {
+      ctx.body = ctx.request.query;
+    },
+  ])
+);
 ```
 
 ### with koa-mount
@@ -97,17 +99,20 @@ app.use(compose([
 ```js
 import Koa from 'koa';
 import mount from 'koa-mount';
-import validator, {
-  Joi
-} from 'koa-context-validator';
+import validator, { Joi } from 'koa-context-validator';
 
 const app = new Koa();
 
-app.use(mount('/api', validator({
-  query: Joi.object().keys({
-    username: Joi.string().required(),
-  }),
-})));
+app.use(
+  mount(
+    '/api',
+    validator({
+      query: Joi.object().keys({
+        username: Joi.string().required(),
+      }),
+    })
+  )
+);
 ```
 
 ### with koa-router
@@ -115,9 +120,7 @@ app.use(mount('/api', validator({
 ```js
 import Koa from 'koa';
 import Router from 'koa-router';
-import validator, {
-  Joi
-} from 'koa-context-validator';
+import validator, { Joi } from 'koa-context-validator';
 
 const router = new Router();
 router.get(
@@ -140,15 +143,18 @@ app.use(router.middleware());
 
 ```js
 import Koa from 'koa';
-import validator, {
-  Joi
-} from 'koa-context-validator';
+import validator, { Joi } from 'koa-context-validator';
 
-app.use(validator({
-  query: Joi.object().keys({
-    username: Joi.string().required(),
-  }),
-}, { stripUnknown: true }));
+app.use(
+  validator(
+    {
+      query: Joi.object().keys({
+        username: Joi.string().required(),
+      }),
+    },
+    { stripUnknown: true }
+  )
+);
 ```
 
 ## Koa 1.x
@@ -158,17 +164,19 @@ Use `convert.back` from `koa-convert`.
 ```js
 import koa from 'koa'; // koa 1.x
 import convert from 'koa-convert';
-import validator, {
-  Joi
-} from 'koa-context-validator';
+import validator, { Joi } from 'koa-context-validator';
 
 const app = koa();
 
-app.use(convert.back(validator({
-  query: Joi.object().keys({
-    username: Joi.string().required(),
-  }),
-})));
+app.use(
+  convert.back(
+    validator({
+      query: Joi.object().keys({
+        username: Joi.string().required(),
+      }),
+    })
+  )
+);
 ```
 
 ## API
@@ -177,7 +185,7 @@ app.use(convert.back(validator({
 
 #### schema
 
-*Required*
+_Required_
 Type: `object`
 
 A object which has optional `query`, `body`, `headers` and `params` schema to validate.
@@ -189,6 +197,7 @@ Just be passed to Joi's validate function as options:
 https://github.com/hapijs/joi/blob/master/API.md#validatevalue-schema-options-callback.
 
 ### Joi
+
 ### ref
 
 ## License

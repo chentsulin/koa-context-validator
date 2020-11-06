@@ -1,6 +1,6 @@
 # Changelog
 
-## Not published
+## 0.5.0 / 2020-11-06
 
 - [deps] Need `node>=10` now
 - [deps] Update `joi` to v17
