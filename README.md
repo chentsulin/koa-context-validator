@@ -3,7 +3,6 @@
 [![NPM version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Test coverage][coveralls-image]][coveralls-url]
-[![Dependency Status][david_img]][david_site]
 
 > A robust context validator for koajs. Use `Joi` behind the scenes.
 
@@ -210,5 +209,3 @@ MIT © [C.T. Lin](https://github.com/chentsulin/koa-context-validator)
 [travis-url]: https://travis-ci.org/chentsulin/koa-context-validator
 [coveralls-image]: https://coveralls.io/repos/github/chentsulin/koa-context-validator/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/r/chentsulin/koa-context-validator?branch=master
-[david_img]: https://david-dm.org/chentsulin/koa-context-validator.svg
-[david_site]: https://david-dm.org/chentsulin/koa-context-validator
