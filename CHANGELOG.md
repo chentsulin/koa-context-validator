@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0 / 2021-08-18
+
+- [breaking] Support `node >= 12`
+- [breaking] Put `joi` into `peerDependencies`
+
 ## 0.5.0 / 2020-11-06
 
 - [deps] Need `node>=10` now
