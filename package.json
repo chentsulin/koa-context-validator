@@ -61,8 +61,5 @@
     "test:cov": "nyc npm test",
     "lint": "eslint src",
     "prepublishOnly": "npm run clean && npm test && npm run build"
-  },
-  "devEngines": {
-    "node": ">=12"
   }
 }
