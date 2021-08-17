@@ -1,4 +1,4 @@
-export { default as Joi, ref } from 'joi';
+export { default as Joi } from 'joi';
 
 function isKeyOnContext(key) {
   return key === 'params';

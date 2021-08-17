@@ -5,7 +5,7 @@ import bodyParser from 'koa-bodyparser';
 import mount from 'koa-mount';
 import compose from 'koa-compose';
 
-import validator, { Joi, ref } from '..';
+import validator, { Joi } from '..';
 
 const setup = (middlewareArray) => {
   const app = new Koa();
@@ -213,8 +213,8 @@ describe('context', () => {
       validator(
         {
           body: Joi.object().keys({
-            username: Joi.string().default(ref('$defaultUsername')),
-            age: Joi.number().default(ref('$defaultAge')),
+            username: Joi.string().default(Joi.ref('$defaultUsername')),
+            age: Joi.number().default(Joi.ref('$defaultAge')),
           }),
         },
         {
