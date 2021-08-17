@@ -56,9 +56,9 @@
   "scripts": {
     "clean": "rimraf lib dist .nyc_output",
     "build": "npm run clean && babel src -d lib --ignore __tests__",
-    "testonly": "cross-env NODE_ENV=test mocha --require @babel/register --require @babel/polyfill src/**/__tests__/**/*.spec.js",
     "test": "npm run lint && npm run testonly",
-    "test:cov": "nyc npm test",
+    "testonly": "cross-env NODE_ENV=test mocha --require @babel/register --require @babel/polyfill src/**/__tests__/**/*.spec.js",
+    "testonly:cov": "nyc npm run testonly",
     "lint": "eslint src",
     "prepublishOnly": "npm run clean && npm test && npm run build"
   }
