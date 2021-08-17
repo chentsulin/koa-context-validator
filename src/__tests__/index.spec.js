@@ -1,4 +1,3 @@
-/* eslint no-unused-expressions: 0 */
 import { expect } from 'chai';
 import request from 'supertest';
 import Koa from 'koa';
@@ -6,24 +5,18 @@ import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import mount from 'koa-mount';
 import compose from 'koa-compose';
-import Joi_ from 'joi';
 
 import validator, { Joi, ref } from '..';
 
-const setup = middlewareArray => {
+const setup = (middlewareArray) => {
   const app = new Koa();
 
-  middlewareArray.forEach(middleware => {
+  middlewareArray.forEach((middleware) => {
     app.use(middleware);
   });
 
   return app.listen();
 };
-
-it('should export Joi', () => {
-  expect(Joi).to.equal(Joi_);
-  expect(ref).to.exist;
-});
 
 describe('should pass when value is valid', () => {
   it('query', async () => {
@@ -35,9 +28,9 @@ describe('should pass when value is valid', () => {
           username: Joi.string().required(),
         }),
       }),
-      ctx => {
+      (ctx) => {
         query = ctx.request.query;
-      }
+      },
     ]);
 
     await request(server)
@@ -63,9 +56,9 @@ describe('should pass when value is valid', () => {
           age: Joi.number().required(),
         }),
       }),
-      ctx => {
+      (ctx) => {
         body = ctx.request.body;
-      }
+      },
     ]);
 
     await request(server)
@@ -91,9 +84,9 @@ describe('should pass when value is valid', () => {
           username: Joi.string().required(),
         }).unknown(),
       }),
-      ctx => {
+      (ctx) => {
         headers = ctx.request.headers;
-      }
+      },
     ]);
 
     await request(server)
@@ -121,7 +114,7 @@ describe('should throw when value is invalid', () => {
         query: Joi.object().keys({
           username: Joi.string().required(),
         }),
-      })
+      }),
     ]);
 
     await request(server)
@@ -148,7 +141,7 @@ describe('should throw when value is invalid', () => {
         body: Joi.object().keys({
           username: Joi.string().required(),
         }),
-      })
+      }),
     ]);
 
     await request(server)
@@ -174,7 +167,7 @@ describe('should throw when value is invalid', () => {
         headers: Joi.object().keys({
           username: Joi.string().required(),
         }).unknown(),
-      })
+      }),
     ]);
 
     await request(server)
@@ -198,9 +191,9 @@ describe('stripUnknown', () => {
           age: Joi.number().required(),
         }),
       }, { stripUnknown: true }),
-      ctx => {
+      (ctx) => {
         body = ctx.request.body;
-      }
+      },
     ]);
 
     await request(server)
@@ -237,9 +230,9 @@ describe('context', () => {
       }, {
         context: { defaultUsername: 'anonymous' },
       }),
-      ctx => {
+      (ctx) => {
         body = ctx.request.body;
-      }
+      },
     ]);
 
     await request(server)
@@ -270,7 +263,7 @@ describe('koa-mount', () => {
         query: Joi.object().keys({
           username: Joi.string().required(),
         }),
-      }))
+      })),
     ]);
 
     await request(server)
@@ -293,10 +286,10 @@ describe('koa-compose', () => {
             username: Joi.string().required(),
           }),
         }),
-        async ctx => {
+        async (ctx) => {
           body = ctx.request.query;
         },
-      ])
+      ]),
     ]);
 
     await request(server)
@@ -324,9 +317,9 @@ describe('koa-router', () => {
           username: Joi.string().required(),
         }),
       }),
-      async ctx => {
+      async (ctx) => {
         body = ctx.request.query;
-      }
+      },
     );
 
     const server = setup([router.middleware()]);
@@ -355,9 +348,9 @@ describe('koa-router', () => {
             username: Joi.string().required(),
           }),
         }),
-        async ctx => {
+        async (ctx) => {
           params = ctx.params;
-        }
+        },
       );
 
       const server = setup([router.middleware()]);
@@ -380,9 +373,9 @@ describe('koa-router', () => {
             username: Joi.string().min(1).max(4).required(),
           }),
         }),
-        async ctx => {
+        async (ctx) => {
           ctx.body = ctx.params;
-        }
+        },
       );
 
       let error;
@@ -394,7 +387,7 @@ describe('koa-router', () => {
             error = err;
           }
         },
-        router.middleware()
+        router.middleware(),
       ]);
 
       await request(server)
@@ -403,7 +396,7 @@ describe('koa-router', () => {
 
       expect(error.name).to.equal('ValidationError');
       expect(error.message).to.equal(
-        '"username" length must be less than or equal to 4 characters long'
+        '"username" length must be less than or equal to 4 characters long',
       );
     });
   });

@@ -1,20 +1,20 @@
 # koa-context-validator
 
-[![NPM version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Test coverage][coveralls-image]][coveralls-url]
+[![npm version](https://badge.fury.io/js/koa-context-validator.svg)](https://npmjs.org/package/koa-context-validator)
+[![Build Status](https://github.com/chentsulin/koa-context-validator/workflows/CI/badge.svg?branch=master)](https://github.com/chentsulin/koa-context-validator/actions?query=branch%3Amaster)
+[![Coverage Status](https://coveralls.io/repos/github/chentsulin/koa-context-validator/badge.svg?branch=master)](https://coveralls.io/r/chentsulin/koa-context-validator?branch=master)
 
 > A robust context validator for koajs. Use `Joi` behind the scenes.
 
-## Install
+## Installation
 
-```console
+```sh
 $ npm install koa-context-validator
 ```
 
 ## Usage
 
-### validate query
+### `query` Validation
 
 ```js
 import Koa from 'koa';
@@ -31,7 +31,7 @@ app.use(
 );
 ```
 
-### validate body
+### `body` Validation
 
 ```js
 import Koa from 'koa';
@@ -51,7 +51,7 @@ app.use(
 );
 ```
 
-### validate headers
+### `headers` Validation
 
 ```js
 import Koa from 'koa';
@@ -70,7 +70,7 @@ app.use(
 );
 ```
 
-### with koa-compose
+### With `koa-compose`
 
 ```js
 import Koa from 'koa';
@@ -93,7 +93,7 @@ app.use(
 );
 ```
 
-### with koa-mount
+### With `koa-mount`
 
 ```js
 import Koa from 'koa';
@@ -114,7 +114,7 @@ app.use(
 );
 ```
 
-### with koa-router
+### With `koa-router`
 
 ```js
 import Koa from 'koa';
@@ -138,7 +138,7 @@ const app = new Koa();
 app.use(router.middleware());
 ```
 
-### stripUnknown
+### `stripUnknown`
 
 ```js
 import Koa from 'koa';
@@ -202,10 +202,3 @@ https://github.com/hapijs/joi/blob/master/API.md#validatevalue-schema-options-ca
 ## License
 
 MIT © [C.T. Lin](https://github.com/chentsulin/koa-context-validator)
-
-[npm-image]: https://badge.fury.io/js/koa-context-validator.svg
-[npm-url]: https://npmjs.org/package/koa-context-validator
-[travis-image]: https://travis-ci.org/chentsulin/koa-context-validator.svg
-[travis-url]: https://travis-ci.org/chentsulin/koa-context-validator
-[coveralls-image]: https://coveralls.io/repos/github/chentsulin/koa-context-validator/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/r/chentsulin/koa-context-validator?branch=master

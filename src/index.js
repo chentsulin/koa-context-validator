@@ -16,7 +16,7 @@ const validator = (schema, opts_) => (ctx, next) => {
     const source = isContextOnlyKey(key) ? ctx : ctx.request;
 
     promises.push(schema[key].validateAsync(source[key], opts)
-      .then(validated => {
+      .then((validated) => {
         Object.defineProperty(source, key, {
           get() {
             return validated;
@@ -24,6 +24,7 @@ const validator = (schema, opts_) => (ctx, next) => {
         });
       }));
   }
+
   return Promise.all(promises).then(next);
 };
 
