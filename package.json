@@ -2,28 +2,25 @@
   "name": "koa-context-validator",
   "version": "0.5.0",
   "description": "A robust context validator for koajs",
-  "main": "lib/index.js",
   "license": "MIT",
+  "author": "C.T. Lin <chentsulin@gmail.com> (https://github.com/chentsulin/koa-context-validator)",
   "repository": "chentsulin/koa-context-validator",
-  "author": {
-    "name": "C.T. Lin",
-    "email": "chentsulin@gmail.com",
-    "url": "https://github.com/chentsulin/koa-context-validator"
-  },
-  "engines": {
-    "node": ">=12"
-  },
+  "main": "lib/index.js",
   "files": [
     "lib"
   ],
-  "keywords": [
-    "koa",
-    "middleware",
-    "context",
-    "validate",
-    "validator",
-    "joi"
-  ],
+  "scripts": {
+    "build": "npm run clean && babel src -d lib --ignore __tests__",
+    "clean": "rimraf lib",
+    "lint": "eslint .",
+    "prepare": "husky install",
+    "prepublishOnly": "npm run clean && npm test && npm run build",
+    "test": "npm run lint && npm run testonly",
+    "testonly": "jest",
+    "testonly:cov": "jest --coverage",
+    "prettier": "prettier --write --list-different .",
+    "prettier:check": "prettier --check ."
+  },
   "dependencies": {
     "joi": "^17.4.2"
   },
@@ -36,22 +33,28 @@
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.0",
+    "husky": "^7.0.1",
     "jest": "^27.0.6",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
     "koa-compose": "^4.1.0",
     "koa-mount": "^4.0.0",
     "koa-router": "^10.0.0",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.3.2",
+    "prettier-package-json": "^2.6.0",
     "rimraf": "^3.0.2",
     "supertest": "^6.1.5"
   },
-  "scripts": {
-    "clean": "rimraf lib",
-    "build": "npm run clean && babel src -d lib --ignore __tests__",
-    "test": "npm run lint && npm run testonly",
-    "testonly": "jest",
-    "testonly:cov": "jest --coverage",
-    "lint": "eslint .",
-    "prepublishOnly": "npm run clean && npm test && npm run build"
+  "keywords": [
+    "context",
+    "joi",
+    "koa",
+    "middleware",
+    "validate",
+    "validator"
+  ],
+  "engines": {
+    "node": ">=12"
   }
 }

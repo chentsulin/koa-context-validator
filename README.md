@@ -27,7 +27,7 @@ app.use(
     query: Joi.object().keys({
       username: Joi.string().required(),
     }),
-  })
+  }),
 );
 ```
 
@@ -47,7 +47,7 @@ app.use(
       username: Joi.string().required(),
       age: Joi.number().required(),
     }),
-  })
+  }),
 );
 ```
 
@@ -66,7 +66,7 @@ app.use(
         username: Joi.string().required(),
       })
       .unknown(),
-  })
+  }),
 );
 ```
 
@@ -89,7 +89,7 @@ app.use(
     async (ctx) => {
       ctx.body = ctx.request.query;
     },
-  ])
+  ]),
 );
 ```
 
@@ -109,8 +109,8 @@ app.use(
       query: Joi.object().keys({
         username: Joi.string().required(),
       }),
-    })
-  )
+    }),
+  ),
 );
 ```
 
@@ -131,7 +131,7 @@ router.get(
   }),
   async (ctx) => {
     ctx.body = ctx.params;
-  }
+  },
 );
 
 const app = new Koa();
@@ -151,8 +151,8 @@ app.use(
         username: Joi.string().required(),
       }),
     },
-    { stripUnknown: true }
-  )
+    { stripUnknown: true },
+  ),
 );
 ```
 
@@ -173,8 +173,8 @@ app.use(
       query: Joi.object().keys({
         username: Joi.string().required(),
       }),
-    })
-  )
+    }),
+  ),
 );
 ```
 

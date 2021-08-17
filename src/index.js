@@ -15,14 +15,15 @@ const validator = (schema, opts_) => async (ctx, next) => {
     const key = keys[i];
     const source = isKeyOnContext(key) ? ctx : ctx.request;
 
-    promises.push(schema[key].validateAsync(source[key], opts)
-      .then((validated) => {
+    promises.push(
+      schema[key].validateAsync(source[key], opts).then((validated) => {
         Object.defineProperty(source, key, {
           get() {
             return validated;
           },
         });
-      }));
+      }),
+    );
   }
 
   await Promise.all(promises);

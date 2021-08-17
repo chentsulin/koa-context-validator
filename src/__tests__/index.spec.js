@@ -32,11 +32,9 @@ describe('should pass when value is valid', () => {
       },
     ]);
 
-    await request(app.callback())
-      .get('/')
-      .query({
-        username: 'Peter',
-      });
+    await request(app.callback()).get('/').query({
+      username: 'Peter',
+    });
 
     expect(query).toEqual({
       username: 'Peter',
@@ -59,12 +57,10 @@ describe('should pass when value is valid', () => {
       },
     ]);
 
-    await request(app.callback())
-      .post('/')
-      .send({
-        username: 'Peter',
-        age: 18,
-      });
+    await request(app.callback()).post('/').send({
+      username: 'Peter',
+      age: 18,
+    });
 
     expect(body).toEqual({
       username: 'Peter',
@@ -77,18 +73,18 @@ describe('should pass when value is valid', () => {
 
     const app = setup([
       validator({
-        headers: Joi.object().keys({
-          username: Joi.string().required(),
-        }).unknown(),
+        headers: Joi.object()
+          .keys({
+            username: Joi.string().required(),
+          })
+          .unknown(),
       }),
       (ctx) => {
         headers = ctx.request.headers;
       },
     ]);
 
-    await request(app.callback())
-      .get('/')
-      .set('username', 'Peter');
+    await request(app.callback()).get('/').set('username', 'Peter');
 
     expect(headers).toHaveProperty('username', 'Peter');
   });
@@ -113,8 +109,7 @@ describe('should throw when value is invalid', () => {
       }),
     ]);
 
-    await request(app.callback())
-      .get('/');
+    await request(app.callback()).get('/');
 
     expect(error.name).toBe('ValidationError');
     expect(error.message).toBe('"username" is required');
@@ -139,8 +134,7 @@ describe('should throw when value is invalid', () => {
       }),
     ]);
 
-    await request(app.callback())
-      .post('/');
+    await request(app.callback()).post('/');
 
     expect(error.name).toBe('ValidationError');
     expect(error.message).toBe('"username" is required');
@@ -158,14 +152,15 @@ describe('should throw when value is invalid', () => {
         }
       },
       validator({
-        headers: Joi.object().keys({
-          username: Joi.string().required(),
-        }).unknown(),
+        headers: Joi.object()
+          .keys({
+            username: Joi.string().required(),
+          })
+          .unknown(),
       }),
     ]);
 
-    await request(app.callback())
-      .get('/');
+    await request(app.callback()).get('/');
 
     expect(error.name).toBe('ValidationError');
     expect(error.message).toBe('"username" is required');
@@ -178,24 +173,25 @@ describe('stripUnknown', () => {
 
     const app = setup([
       bodyParser(),
-      validator({
-        body: Joi.object().keys({
-          username: Joi.string().required(),
-          age: Joi.number().required(),
-        }),
-      }, { stripUnknown: true }),
+      validator(
+        {
+          body: Joi.object().keys({
+            username: Joi.string().required(),
+            age: Joi.number().required(),
+          }),
+        },
+        { stripUnknown: true },
+      ),
       (ctx) => {
         body = ctx.request.body;
       },
     ]);
 
-    await request(app.callback())
-      .post('/')
-      .send({
-        username: 'Peter',
-        age: 18,
-        isActive: true,
-      });
+    await request(app.callback()).post('/').send({
+      username: 'Peter',
+      age: 18,
+      isActive: true,
+    });
 
     expect(body).toEqual({
       username: 'Peter',
@@ -214,22 +210,23 @@ describe('context', () => {
         await next();
       },
       bodyParser(),
-      validator({
-        body: Joi.object().keys({
-          username: Joi.string().default(ref('$defaultUsername')),
-          age: Joi.number().default(ref('$defaultAge')),
-        }),
-      }, {
-        context: { defaultUsername: 'anonymous' },
-      }),
+      validator(
+        {
+          body: Joi.object().keys({
+            username: Joi.string().default(ref('$defaultUsername')),
+            age: Joi.number().default(ref('$defaultAge')),
+          }),
+        },
+        {
+          context: { defaultUsername: 'anonymous' },
+        },
+      ),
       (ctx) => {
         body = ctx.request.body;
       },
     ]);
 
-    await request(app.callback())
-      .post('/')
-      .send({});
+    await request(app.callback()).post('/').send({});
 
     expect(body).toEqual({
       username: 'anonymous',
@@ -250,15 +247,17 @@ describe('koa-mount', () => {
           error = err;
         }
       },
-      mount('/api', validator({
-        query: Joi.object().keys({
-          username: Joi.string().required(),
+      mount(
+        '/api',
+        validator({
+          query: Joi.object().keys({
+            username: Joi.string().required(),
+          }),
         }),
-      })),
+      ),
     ]);
 
-    await request(app.callback())
-      .get('/api');
+    await request(app.callback()).get('/api');
 
     expect(error.name).toBe('ValidationError');
     expect(error.message).toBe('"username" is required');
@@ -282,11 +281,9 @@ describe('koa-compose', () => {
       ]),
     ]);
 
-    await request(app.callback())
-      .get('/')
-      .query({
-        username: 'Peter',
-      });
+    await request(app.callback()).get('/').query({
+      username: 'Peter',
+    });
 
     expect(body).toEqual({
       username: 'Peter',
@@ -313,11 +310,9 @@ describe('koa-router', () => {
 
     const app = setup([router.middleware()]);
 
-    await request(app.callback())
-      .get('/api')
-      .query({
-        username: 'Peter',
-      });
+    await request(app.callback()).get('/api').query({
+      username: 'Peter',
+    });
 
     expect(body).toEqual({
       username: 'Peter',
@@ -343,8 +338,7 @@ describe('koa-router', () => {
 
       const app = setup([router.middleware()]);
 
-      await request(app.callback())
-        .get('/api/Peter');
+      await request(app.callback()).get('/api/Peter');
 
       expect(params).toEqual({
         username: 'Peter',
@@ -377,8 +371,7 @@ describe('koa-router', () => {
         router.middleware(),
       ]);
 
-      await request(app.callback())
-        .get('/api/Peter');
+      await request(app.callback()).get('/api/Peter');
 
       expect(error.name).toBe('ValidationError');
       expect(error.message).toBe(
