@@ -7,6 +7,7 @@ import bodyParser from 'koa-bodyparser';
 import mount from 'koa-mount';
 import compose from 'koa-compose';
 import Joi_ from 'joi';
+
 import validator, { Joi, ref } from '..';
 
 const setup = middlewareArray => {
