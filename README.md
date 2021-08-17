@@ -9,7 +9,7 @@
 ## Installation
 
 ```sh
-$ npm install koa-context-validator
+$ npm install koa-context-validator joi
 ```
 
 ## Usage
