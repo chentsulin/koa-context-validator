@@ -8,14 +8,13 @@
   "author": {
     "name": "C.T. Lin",
     "email": "chentsulin@gmail.com",
-    "url": "github.com/chentsulin/koa-context-validator"
+    "url": "https://github.com/chentsulin/koa-context-validator"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "files": [
-    "lib",
-    "src"
+    "lib"
   ],
   "keywords": [
     "koa",
@@ -26,40 +25,39 @@
     "joi"
   ],
   "dependencies": {
-    "joi": "^17.3.0"
+    "joi": "^17.4.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.1",
-    "@babel/core": "^7.12.3",
-    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/plugin-transform-runtime": "^7.15.0",
     "@babel/polyfill": "^7.12.1",
-    "@babel/preset-env": "^7.12.1",
-    "@babel/register": "^7.12.1",
-    "@babel/runtime-corejs2": "^7.12.1",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/register": "^7.15.3",
+    "@babel/runtime-corejs2": "^7.15.3",
     "babel-eslint": "^10.1.0",
-    "chai": "^4.2.0",
-    "cross-env": "^7.0.2",
-    "eslint": "^7.12.1",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.1",
+    "chai": "^4.3.4",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.0",
     "istanbul": "^0.4.5",
-    "koa": "^2.13.0",
+    "jest": "^27.0.6",
+    "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
     "koa-compose": "^4.1.0",
     "koa-mount": "^4.0.0",
     "koa-router": "^10.0.0",
-    "mocha": "^8.2.1",
-    "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
-    "supertest": "^6.0.0"
+    "supertest": "^6.1.5"
   },
   "scripts": {
-    "clean": "rimraf lib dist .nyc_output",
+    "clean": "rimraf lib",
     "build": "npm run clean && babel src -d lib --ignore __tests__",
     "test": "npm run lint && npm run testonly",
-    "testonly": "cross-env NODE_ENV=test mocha --require @babel/register --require @babel/polyfill src/**/__tests__/**/*.spec.js",
-    "testonly:cov": "nyc npm run testonly",
-    "lint": "eslint src",
+    "testonly": "jest",
+    "testonly:cov": "jest --coverage",
+    "lint": "eslint .",
     "prepublishOnly": "npm run clean && npm test && npm run build"
   }
 }
