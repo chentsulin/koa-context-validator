@@ -1,4 +1,5 @@
 # Ignore the compiled output.
+lib/
 dist/
 website/build
 
