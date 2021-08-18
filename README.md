@@ -4,7 +4,7 @@
 [![Build Status](https://github.com/chentsulin/koa-context-validator/workflows/CI/badge.svg?branch=master)](https://github.com/chentsulin/koa-context-validator/actions?query=branch%3Amaster)
 [![Coverage Status](https://coveralls.io/repos/github/chentsulin/koa-context-validator/badge.svg?branch=master)](https://coveralls.io/r/chentsulin/koa-context-validator?branch=master)
 
-> A robust context validator for koajs. Use `Joi` behind the scenes.
+> A robust context validator for koajs. Use [`Joi`](https://github.com/sideway/joi) behind the scenes.
 
 ## Installation
 
@@ -138,7 +138,7 @@ const app = new Koa();
 app.use(router.middleware());
 ```
 
-### `stripUnknown`
+### With `stripUnknown`
 
 ```js
 import Koa from 'koa';
@@ -153,6 +153,22 @@ app.use(
     },
     { stripUnknown: true },
   ),
+);
+```
+
+### With `Joi.ref`
+
+```js
+import Koa from 'koa';
+import validator, { Joi } from 'koa-context-validator';
+
+app.use(
+  validator({
+    body: Joi.object().keys({
+      username: Joi.string().default(Joi.ref('$defaultUsername')),
+      age: Joi.number().default(Joi.ref('$defaultAge')),
+    }),
+  }),
 );
 ```
 
@@ -197,7 +213,7 @@ https://github.com/hapijs/joi/blob/master/API.md#validatevalue-schema-options-ca
 
 ### Joi
 
-### ref
+The `Joi` object from the [joi](https://github.com/sideway/joi) package.
 
 ## License
 
