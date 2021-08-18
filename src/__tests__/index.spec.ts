@@ -1,17 +1,19 @@
 import request from 'supertest';
 import Koa from 'koa';
-import Router from 'koa-router';
+import Router from '@koa/router';
 import bodyParser from 'koa-bodyparser';
 import mount from 'koa-mount';
 import compose from 'koa-compose';
 
 import validator, { Joi } from '..';
 
-const setup = (middlewareArray) => {
-  const app = new Koa();
+const setup = <StateT = Koa.DefaultState, ContextT = Koa.DefaultContext>(
+  middleware: Koa.Middleware<StateT, ContextT>[],
+) => {
+  const app = new Koa<StateT, ContextT>();
 
-  middlewareArray.forEach((middleware) => {
-    app.use(middleware);
+  middleware.forEach((mw) => {
+    app.use(mw);
   });
 
   return app;
@@ -95,7 +97,7 @@ describe('should throw when value is invalid', () => {
     let error;
 
     const app = setup([
-      async (ctx, next) => {
+      async (_, next) => {
         try {
           await next();
         } catch (err) {
@@ -111,15 +113,15 @@ describe('should throw when value is invalid', () => {
 
     await request(app.callback()).get('/');
 
-    expect(error.name).toBe('ValidationError');
-    expect(error.message).toBe('"username" is required');
+    expect(error).toHaveProperty('name', 'ValidationError');
+    expect(error).toHaveProperty('message', '"username" is required');
   });
 
   it('body', async () => {
     let error;
 
     const app = setup([
-      async (ctx, next) => {
+      async (_, next) => {
         try {
           await next();
         } catch (err) {
@@ -136,15 +138,15 @@ describe('should throw when value is invalid', () => {
 
     await request(app.callback()).post('/');
 
-    expect(error.name).toBe('ValidationError');
-    expect(error.message).toBe('"username" is required');
+    expect(error).toHaveProperty('name', 'ValidationError');
+    expect(error).toHaveProperty('message', '"username" is required');
   });
 
   it('headers', async () => {
     let error;
 
     const app = setup([
-      async (ctx, next) => {
+      async (_, next) => {
         try {
           await next();
         } catch (err) {
@@ -162,8 +164,8 @@ describe('should throw when value is invalid', () => {
 
     await request(app.callback()).get('/');
 
-    expect(error.name).toBe('ValidationError');
-    expect(error.message).toBe('"username" is required');
+    expect(error).toHaveProperty('name', 'ValidationError');
+    expect(error).toHaveProperty('message', '"username" is required');
   });
 });
 
@@ -204,13 +206,16 @@ describe('context', () => {
   it('should merge Koa context into context option', async () => {
     let body;
 
-    const app = setup([
+    const app = setup<
+      Koa.DefaultState,
+      Koa.DefaultContext & { defaultAge: number }
+    >([
       async (ctx, next) => {
         ctx.defaultAge = 42;
         await next();
       },
       bodyParser(),
-      validator(
+      validator<Koa.DefaultState, Koa.DefaultContext & { defaultAge: number }>(
         {
           body: Joi.object().keys({
             username: Joi.string().default(Joi.ref('$defaultUsername')),
@@ -240,7 +245,7 @@ describe('koa-mount', () => {
     let error;
 
     const app = setup([
-      async (ctx, next) => {
+      async (_, next) => {
         try {
           await next();
         } catch (err) {
@@ -259,8 +264,8 @@ describe('koa-mount', () => {
 
     await request(app.callback()).get('/api');
 
-    expect(error.name).toBe('ValidationError');
-    expect(error.message).toBe('"username" is required');
+    expect(error).toHaveProperty('name', 'ValidationError');
+    expect(error).toHaveProperty('message', '"username" is required');
   });
 });
 
@@ -291,7 +296,7 @@ describe('koa-compose', () => {
   });
 });
 
-describe('koa-router', () => {
+describe('@koa/router', () => {
   it('should work with routing', async () => {
     let body;
 
@@ -361,20 +366,22 @@ describe('koa-router', () => {
 
       let error;
       const app = setup([
-        async (ctx, next) => {
+        async (_, next) => {
           try {
             await next();
           } catch (err) {
             error = err;
           }
         },
+        // @ts-expect-error https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55250
         router.middleware(),
       ]);
 
       await request(app.callback()).get('/api/Peter');
 
-      expect(error.name).toBe('ValidationError');
-      expect(error.message).toBe(
+      expect(error).toHaveProperty('name', 'ValidationError');
+      expect(error).toHaveProperty(
+        'message',
         '"username" length must be less than or equal to 4 characters long',
       );
     });

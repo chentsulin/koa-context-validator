@@ -33,6 +33,9 @@ jobs:
       - name: Lint ESLint
         run: npm run lint
 
+      - name: Type Check
+        run: npm run check
+
       - name: Lint Prettier
         run: npm run prettier:check
 
