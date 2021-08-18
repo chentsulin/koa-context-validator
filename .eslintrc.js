@@ -1,11 +1,11 @@
 module.exports = {
   parser: 'babel-eslint',
-  extends: ['airbnb-base'],
+  extends: ['airbnb-base', 'prettier'],
   env: {
     node: true,
     jest: true,
   },
   rules: {
-    'no-plusplus': 'off',
+    'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
   },
 };
