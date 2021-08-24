@@ -114,11 +114,11 @@ app.use(
 );
 ```
 
-### With `koa-router`
+### With `@koa/router`
 
 ```js
 import Koa from 'koa';
-import Router from 'koa-router';
+import Router from '@koa/router';
 import validator, { Joi } from 'koa-context-validator';
 
 const router = new Router();
@@ -214,6 +214,10 @@ https://github.com/hapijs/joi/blob/master/API.md#validatevalue-schema-options-ca
 ### Joi
 
 The `Joi` object from the [joi](https://github.com/sideway/joi) package.
+
+## TypeScript
+
+As of version 1.0.0 we've added initial support for TypeScript.
 
 ## License
 

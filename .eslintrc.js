@@ -1,11 +1,23 @@
 module.exports = {
-  parser: 'babel-eslint',
-  extends: ['airbnb-base', 'prettier'],
+  parser: '@typescript-eslint/parser',
+  extends: [
+    'airbnb-base',
+    'prettier',
+    'plugin:import/typescript',
+    'plugin:@typescript-eslint/recommended',
+  ],
   env: {
     node: true,
     jest: true,
   },
   rules: {
-    'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        ts: 'never',
+      },
+    ],
   },
 };
