@@ -1,6 +1,6 @@
 {
   "name": "koa-context-validator",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "A robust context validator for koajs",
   "license": "MIT",
   "author": "C.T. Lin <chentsulin@gmail.com> (https://github.com/chentsulin/koa-context-validator)",
