@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.0 / 2021-08-24
+
+- [new] Add TypeScript support
+- [breaking] Remove `ref` export. Use `Joi.ref` instead.
+
 ## 0.6.0 / 2021-08-18
 
 - [breaking] Support `node >= 12`
