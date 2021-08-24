@@ -138,7 +138,7 @@ const app = new Koa();
 app.use(router.middleware());
 ```
 
-### With `stripUnknown`
+### With `options`
 
 ```js
 import Koa from 'koa';
@@ -151,8 +151,36 @@ app.use(
         username: Joi.string().required(),
       }),
     },
-    { stripUnknown: true },
+    {
+      abortEarly: true,
+      allowUnknown: false,
+      cache: true,
+      stripUnknown: true,
+      debug: false,
+    },
   ),
+);
+```
+
+### Asynchronous Operations
+
+```js
+import Koa from 'koa';
+import validator, { Joi } from 'koa-context-validator';
+
+const lookup = async (username) => {
+  const user = await db.get('user', username);
+  if (!user) {
+    throw new Error('Invalid username');
+  }
+};
+
+app.use(
+  validator({
+    body: Joi.object().keys({
+      username: Joi.string().external(lookup),
+    }),
+  }),
 );
 ```
 
@@ -209,7 +237,7 @@ A object which has optional `query`, `body`, `headers` and `params` schema to va
 
 Just be passed to Joi's validate function as options:
 
-https://github.com/hapijs/joi/blob/master/API.md#validatevalue-schema-options-callback.
+https://joi.dev/api/?v=17.4.2#anyvalidatevalue-options
 
 ### Joi
 
